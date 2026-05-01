@@ -1,0 +1,6 @@
+{
+  "name": "BaseAgents UI",
+  "description": "ERC-8004 Identity Trust Layer. Create, register Identity NFTs, set metadata, and validate wallets on Base.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
