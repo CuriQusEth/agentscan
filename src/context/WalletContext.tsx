@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useState, ReactNode } from 'react';
+import React, { createContext, useContext, ReactNode } from 'react';
+import { useAccount, useConnect, useDisconnect } from 'wagmi';
+import { injected } from 'wagmi/connectors';
 
 type WalletContextType = {
   address: string | null;
@@ -9,19 +11,20 @@ type WalletContextType = {
 const WalletContext = createContext<WalletContextType | undefined>(undefined);
 
 export function WalletProvider({ children }: { children: ReactNode }) {
-  const [address, setAddress] = useState<string | null>(null);
+  const { address, isConnected } = useAccount();
+  const { connect } = useConnect();
+  const { disconnect } = useDisconnect();
 
-  const connect = () => {
-    // Mock connection
-    setAddress('0x' + Math.random().toString(16).slice(2, 42).padEnd(40, '0'));
+  const handleConnect = () => {
+    connect({ connector: injected() });
   };
 
-  const disconnect = () => {
-    setAddress(null);
+  const handleDisconnect = () => {
+    disconnect();
   };
 
   return (
-    <WalletContext.Provider value={{ address, connect, disconnect }}>
+    <WalletContext.Provider value={{ address: isConnected ? address || null : null, connect: handleConnect, disconnect: handleDisconnect }}>
       {children}
     </WalletContext.Provider>
   );

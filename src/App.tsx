@@ -4,14 +4,18 @@
  */
 
 import { useState } from 'react';
+import { WagmiProvider } from 'wagmi';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { config } from './config';
 import { WalletProvider } from './context/WalletContext';
-import { AgentProvider } from './context/AgentContext';
+import { SecurityProvider } from './context/SecurityContext';
 import Layout from './components/Layout';
 import Dashboard from './pages/Dashboard';
-import Builder from './pages/Builder';
-import Registry from './pages/Registry';
-import SIWA from './pages/SIWA';
-import Templates from './pages/Templates';
+import Scanner from './pages/Scanner';
+import Leaderboard from './pages/Leaderboard';
+import Reports from './pages/Reports';
+
+const queryClient = new QueryClient();
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -19,21 +23,24 @@ export default function App() {
   const renderContent = () => {
     switch (activeTab) {
       case 'dashboard': return <Dashboard />;
-      case 'builder': return <Builder />;
-      case 'registry': return <Registry />;
-      case 'siwa': return <SIWA />;
-      case 'templates': return <Templates />;
+      case 'scanner': return <Scanner />;
+      case 'leaderboard': return <Leaderboard />;
+      case 'reports': return <Reports />;
       default: return <Dashboard />;
     }
   };
 
   return (
-    <WalletProvider>
-      <AgentProvider>
-        <Layout activeTab={activeTab} setActiveTab={setActiveTab}>
-          {renderContent()}
-        </Layout>
-      </AgentProvider>
-    </WalletProvider>
+    <WagmiProvider config={config}>
+      <QueryClientProvider client={queryClient}>
+        <WalletProvider>
+          <SecurityProvider>
+            <Layout activeTab={activeTab} setActiveTab={setActiveTab}>
+              {renderContent()}
+            </Layout>
+          </SecurityProvider>
+        </WalletProvider>
+      </QueryClientProvider>
+    </WagmiProvider>
   );
 }
