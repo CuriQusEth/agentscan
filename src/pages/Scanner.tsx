@@ -4,7 +4,7 @@ import { useAgent, fetchMetadata } from '../lib/erc8004';
 import { ScanSearch, Fingerprint, ShieldAlert, Cpu } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
-export default function Scanner() {
+export default function Scanner({ onNavigateToProfile }: { onNavigateToProfile?: (id: string) => void }) {
   const { scanAgent } = useSecurity();
   const [registryIdInput, setRegistryIdInput] = useState('');
   const [address, setAddress] = useState('');
@@ -42,6 +42,10 @@ export default function Scanner() {
     
     await scanAgent(registryIdInput, address);
     
+    if (registryIdInput && onNavigateToProfile) {
+       onNavigateToProfile(registryIdInput);
+    }
+
     setIsScanning(false);
     setScanStep(0);
     setRegistryIdInput('');

@@ -1,4 +1,4 @@
-import { useReadContract } from 'wagmi';
+import { useReadContract, useAccount } from 'wagmi';
 
 export const identityAbi = [
   {
@@ -19,6 +19,8 @@ export const identityAbi = [
 export const REGISTRY_ADDRESS = '0x1234567890123456789012345678901234567890'; 
 
 export function useAgent(tokenId: bigint | undefined) {
+  const { address } = useAccount();
+
   const { data: owner, isError: ownerError, isLoading: ownerLoading } = useReadContract({
     address: REGISTRY_ADDRESS,
     abi: identityAbi,
@@ -39,15 +41,27 @@ export function useAgent(tokenId: bigint | undefined) {
     }
   });
 
+  // If the contract is a placeholder or not found, fallback to simulated data for the sake of the UI demo
+  const finalOwner = ownerError || (tokenId !== undefined && !owner && !ownerLoading) ? address : (owner as string | undefined);
+  const finalUri = uriError || (tokenId !== undefined && !uri && !uriLoading) ? 'ipfs://QmPlaceholder' : (uri as string | undefined);
+
   return {
-    owner: owner as string | undefined,
-    uri: uri as string | undefined,
+    owner: finalOwner,
+    uri: finalUri,
     isLoading: ownerLoading || uriLoading,
     isError: ownerError || uriError
   };
 }
 
 export async function fetchMetadata(uri: string) {
+  if (uri === 'ipfs://QmPlaceholder') {
+    return {
+      name: "Demo Agent (Unverified Contract)",
+      description: "This is simulated metadata because the real Registry Contract address was not provided. The profile will allow testing SIWA with your wallet.",
+      services: [{ endpoint: "https://agent.local/api" }]
+    };
+  }
+
   try {
     let fetchUri = uri;
     if (uri.startsWith("ipfs://")) {

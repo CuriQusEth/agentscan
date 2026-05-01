@@ -7,7 +7,7 @@ export default function Reports() {
   const { agents } = useSecurity();
 
   // Show only scanned agents with some level of vulnerability or lower scores
-  const reports = agents.filter(a => a.securityScore < 90);
+  const reports = agents.filter(a => a.trustScore < 90);
 
   if (reports.length === 0) {
     return (
@@ -31,13 +31,13 @@ export default function Reports() {
           <motion.div key={agent.id} initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} className="bg-slate-900/40 border border-slate-800/60 rounded-3xl overflow-hidden shadow-lg">
             {/* Header */}
             <div className={`p-6 border-b flex flex-col md:flex-row md:items-center justify-between gap-4 ${
-              agent.securityScore < 60 ? 'border-rose-500/20 bg-rose-500/5' : 
-              agent.securityScore < 80 ? 'border-amber-500/20 bg-amber-500/5' : 
+              agent.trustScore < 60 ? 'border-rose-500/20 bg-rose-500/5' : 
+              agent.trustScore < 80 ? 'border-amber-500/20 bg-amber-500/5' : 
               'border-slate-800/60 bg-slate-800/20'
             }`}>
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 bg-[#020617] rounded-2xl flex items-center justify-center border border-slate-800/80 shrink-0">
-                  <FileText size={20} className={agent.securityScore < 60 ? 'text-rose-400' : 'text-slate-400'} />
+                  <FileText size={20} className={agent.trustScore < 60 ? 'text-rose-400' : 'text-slate-400'} />
                 </div>
                 <div>
                   <h3 className="font-bold text-lg text-white">{agent.name} <span className="text-sm font-normal text-slate-500 ml-2">Audit Report #{Math.random().toString(36).substr(2, 6).toUpperCase()}</span></h3>
@@ -49,8 +49,8 @@ export default function Reports() {
               </div>
               <div className="flex items-center gap-4 bg-[#020617] px-4 py-2 rounded-xl border border-slate-800/60">
                 <div className="text-xs font-semibold text-slate-500">TRUST SCORE</div>
-                <div className={`text-2xl font-bold ${agent.securityScore < 60 ? 'text-rose-400' : agent.securityScore < 80 ? 'text-amber-400' : 'text-white'}`}>
-                  {agent.securityScore}/100
+                <div className={`text-2xl font-bold ${agent.trustScore < 60 ? 'text-rose-400' : agent.trustScore < 80 ? 'text-amber-400' : 'text-white'}`}>
+                  {agent.trustScore}/100
                 </div>
               </div>
             </div>

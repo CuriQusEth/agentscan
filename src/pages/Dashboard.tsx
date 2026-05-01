@@ -18,7 +18,7 @@ export default function Dashboard() {
   };
 
   const avgScore = agents.length > 0 
-    ? Math.round(agents.reduce((acc, a) => acc + a.securityScore, 0) / agents.length)
+    ? Math.round(agents.reduce((acc, a) => acc + a.trustScore, 0) / agents.length)
     : 0;
     
   const criticalVulns = agents.reduce((acc, a) => acc + a.vulnerabilities.critical, 0);
@@ -68,7 +68,7 @@ export default function Dashboard() {
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="text-[11px] uppercase tracking-wider text-slate-500 border-b border-slate-800/40">
+                 <tr className="text-[11px] uppercase tracking-wider text-slate-500 border-b border-slate-800/40">
                   <th className="px-4 py-4 font-bold">Registry ID</th>
                   <th className="px-4 py-4 font-bold">Agent Name</th>
                   <th className="px-4 py-4 font-bold">Trust Score</th>
@@ -97,11 +97,11 @@ export default function Dashboard() {
                       <div className="flex items-center gap-2">
                         <div className="w-16 h-1.5 bg-slate-800 rounded-full overflow-hidden">
                           <div 
-                            className={`h-full rounded-full ${agent.securityScore >= 85 ? 'bg-emerald-500' : agent.securityScore >= 60 ? 'bg-amber-500' : 'bg-rose-500'}`}
-                            style={{ width: `${agent.securityScore}%` }}
+                            className={`h-full rounded-full ${agent.trustScore >= 85 ? 'bg-emerald-500' : agent.trustScore >= 60 ? 'bg-amber-500' : 'bg-rose-500'}`}
+                            style={{ width: `${agent.trustScore}%` }}
                           ></div>
                         </div>
-                        <span className={`font-bold ${agent.securityScore >= 85 ? 'text-emerald-400' : agent.securityScore >= 60 ? 'text-amber-400' : 'text-rose-400'}`}>{agent.securityScore}</span>
+                        <span className={`font-bold ${agent.trustScore >= 85 ? 'text-emerald-400' : agent.trustScore >= 60 ? 'text-amber-400' : 'text-rose-400'}`}>{agent.trustScore}</span>
                       </div>
                     </td>
                     <td className="px-4 py-4 text-center">
